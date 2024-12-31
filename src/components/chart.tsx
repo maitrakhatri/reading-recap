@@ -178,7 +178,7 @@ const CirclePackingChart = () => {
       }
       const pngUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.download = "chart.png";
+      link.download = `${username}_reading_recap.png`;
       link.href = pngUrl;
       link.click();
     };
