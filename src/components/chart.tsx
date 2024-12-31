@@ -22,6 +22,7 @@ const CirclePackingChart = () => {
   useEffect(() => {
     const width = 800;
     const height = 950; // Adjusted height to include additional text for total
+    const padding = 20; // Padding around the parent circle
 
     const data = {
       name: "Books",
@@ -43,7 +44,7 @@ const CirclePackingChart = () => {
 
     const pack = d3
       .pack()
-      .size([width, height - 150]) // Adjusted for additional text space
+      .size([width - 2 * padding, height - 150 - 2 * padding]) // Adjust size for padding
       .padding(10);
 
     const root = d3.hierarchy(data).sum((d: any) => d.value);
@@ -57,7 +58,10 @@ const CirclePackingChart = () => {
       .select(ref.current)
       .append("svg")
       .attr("xmlns", "http://www.w3.org/2000/svg")
-      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr(
+        "viewBox",
+        `-${padding} -${padding} ${width} ${height}` // Add padding to the viewBox
+      )
       .style("width", "100%")
       .style("height", "100%");
 
@@ -116,7 +120,7 @@ const CirclePackingChart = () => {
     svg
       .append("text")
       .attr("x", width / 2)
-      .attr("y", height - 20)
+      .attr("y", height - 40)
       .attr("text-anchor", "middle")
       .style("font-size", "16px")
       .style("font-weight", "normal")
@@ -165,8 +169,13 @@ const CirclePackingChart = () => {
     const ctx = canvas.getContext("2d");
     const img = new Image();
 
+    // Ensure a white background for the chart
     img.onload = () => {
-      ctx?.drawImage(img, 0, 0);
+      if (ctx) {
+        ctx.fillStyle = "#ffffff"; // Set the background to white
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // Fill the canvas
+        ctx.drawImage(img, 0, 0); // Draw the SVG image on top
+      }
       const pngUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.download = "chart.png";
